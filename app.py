@@ -40,6 +40,7 @@ def download_csv_data(df, ticker_symbol):
     )
 
 
+# TODO: Troubleshoot graphs appearing based on selection and test download CSV functionality
 if graphs == 'Close prices':
     st.write("""
     ## Close prices
