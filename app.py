@@ -13,16 +13,21 @@ Created based on the following:
 
 Disclaimer: **DO NOT** use for making live trading decisions. This project was created purely for academic purposes.
 
+To use, complete the selections in the sidebar.
+
+For a list of company tickers, click here: [Symbol Lookup from Yahoo Finance](https://finance.yahoo.com/lookup)
 """)
 
 with st.sidebar:
     tickerSymbol = st.text_input('Enter the ticker of the company you would like to see the data for: ')
     period = st.selectbox('Period:', ['1d', '5d', '1mo', '3mo', '6mo', '1y', '2y', '5y', '10y', 'ytd', 'max'])
-    start = st.date_input('Start date:')
-    end = st.date_input('End date:')
+    start = str(st.date_input('Start date:'))
+    end = str(st.date_input('End date:'))
     interval = st.selectbox('Interval:',
                             ['1m', '2m', '5m', '15m', '30m', '60m', '90m', '1h', '1d', '5d', '1wk', '1mo', '3mo'])
-    graphs = st.multiselect('Choose the graphs you would like to see:', ['Close prices', 'Volume'])
+    st.write("Graph selection:")
+    close = st.checkbox('Close prices')
+    volume = st.checkbox('Volume')
 
 tickerData = yf.Ticker(tickerSymbol)
 
@@ -41,15 +46,20 @@ def download_csv_data(df, ticker_symbol):
 
 
 # TODO: Troubleshoot graphs appearing based on selection and test download CSV functionality
-if graphs == 'Close prices':
-    st.write("""
-    ## Close prices
-    """)
-    st.line_chart(tickerDf.Close)
-    download_csv_data(tickerDf, tickerSymbol)
-elif graphs == 'Volume':
-    st.write("""
-    ## Volume
-    """)
-    st.line_chart(tickerDf.Volume)
-    download_csv_data(tickerDf, tickerSymbol)
+with st.container():
+    if close:
+        st.write("""
+        ## Close prices
+        """)
+        st.line_chart(tickerDf.Close)
+
+
+with st.container():
+    if volume:
+        st.write("""
+        ## Volume
+        """)
+        st.line_chart(tickerDf.Volume)
+
+
+download_csv_data(tickerDf, tickerSymbol)
